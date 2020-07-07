@@ -30,7 +30,7 @@ public class Collegamento {
 			Class.forName(driver);
 			String url = "jdbc:mysql://"+port+"/"+nameDb+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 			dbConnection = DriverManager.getConnection(url, userName, password);
-			System.out.println("conessione!");
+			System.out.println("conessione!2");
 			return true;
 			
 		} catch (Exception e) {

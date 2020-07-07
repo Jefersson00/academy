@@ -1,6 +1,8 @@
 package dao;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,22 +18,22 @@ public class RuoloDao extends Collegamento {
 	public RuoloDao() {
 		// TODO Auto-generated constructor stub
 	}
-//
-//	public static void main(String[] args) {
-//
-//		try {
-//
-////			Date d = new Date(new java.util.Date().getTime());
-////			RuoloDao.insert("nome");
-////			RuoloDao.delete(1);
-////			RuoloDao.update(2, "nuomadescrizione");
-//			RuoloDao.query(2);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//	}
+
+	public static void main(String[] args) {
+
+		try {
+			RuoloDao t = new RuoloDao();
+//			boolean testProva = t.insert("police");
+//			System.out.println(testProva);
+			System.out.println(t.delete(7));
+//			List<Ruolo> d = t.getAll();
+//			System.out.println(d.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	public boolean insert(String descrizione) throws SQLException {
 
@@ -39,7 +41,7 @@ public class RuoloDao extends Collegamento {
 
 		try {
 
-			cmd = getDbConnection().prepareStatement(updateTableSQL);
+			cmd = c.prepareStatement(updateTableSQL);
 			cmd.setString(1, descrizione);
 
 			// execute update SQL stetement
@@ -74,16 +76,25 @@ public class RuoloDao extends Collegamento {
 			cmd = c.prepareStatement(updateTableSQL);
 			cmd.setInt(1, id);
 			// execute update SQL stetement
-			cmd.executeUpdate();
 			
-			Optional<Ruolo> temp =Optional.of(getbyId(id).get());
-			if(temp.isEmpty()) {
+			
+			Optional<Ruolo> temp =getbyId(id);
+			if(temp.isPresent()) {
 				System.out.println("Delete Ruolo Db");
-				return true;
+				cmd.executeUpdate();
+				if(Optional.of(getbyId(id).get()).isEmpty()) {
+					System.out.println("eliminato corretamente");
+					
+					return true;
+				}else {
+					System.out.println("non eliminato");
+					
+					return false;
+				}
 			}
 			else {
 				
-				System.out.println("Delete Ruolo Db false errore");
+				System.out.println("elemento non trovato ");
 				return false;
 			}
 			
@@ -107,23 +118,34 @@ public class RuoloDao extends Collegamento {
 		}
 	}
 
-	public static void update(int idruolo, String desc) throws SQLException {
-
+	public Optional<Ruolo> update (int idRuolo, String desc) throws SQLException {
+		
+		Optional<Ruolo> tmpRuoloOptional = Optional.empty();
 		String updateTableSQL = "UPDATE ruolo SET descrizione = ?  WHERE idruolo = ?";
-
+		
 		try {
-
-			cmd = c.prepareStatement(updateTableSQL);
-
-			cmd.setString(1, desc);
-			cmd.setInt(2, idruolo);
-
-			cmd.executeUpdate();
-
-			System.out.println("Record is updated to DBUSER !");
+			Optional<Ruolo> tmpTest = Optional.of(new Ruolo(idRuolo,desc));
+			if(tmpTest.isPresent()) {
+				
+				cmd = c.prepareStatement(updateTableSQL);
+				cmd.setString(1, desc);
+				cmd.setInt(2, idRuolo);
+				
+				cmd.executeUpdate();
+				
+				tmpRuoloOptional =Optional.of(getbyId(idRuolo).get());
+				System.out.println("Record is updated to DBUSER !");
+				
+			}
+			else {
+				System.out.println("Ruolo by id "+idRuolo +"isnt present ");
+			}
+			
 
 		} catch (Exception e) {
 
+
+			
 			e.printStackTrace();
 		} finally {
 
@@ -136,34 +158,27 @@ public class RuoloDao extends Collegamento {
 			}
 
 		}
-
+		return tmpRuoloOptional;
 	}
 
-	public static void getAll(int id) {
+	
+	public  List<Ruolo> getAll() {
+		List<Ruolo> listaImpiegati = new ArrayList<Ruolo>();
 
 		try {
 
-			String qry = "SELECT * FROM ruolo WHERE idruolo= ? ";
-
-			// Creiamo un oggetto PrepareStatement per poter interrogare il db
+			String qry = "SELECT * FROM ruolo ";
 			PreparedStatement cmd = c.prepareStatement(qry);
-
-			cmd.setInt(1, id);
-
 			ResultSet res = cmd.executeQuery();
-
-			boolean tro = res.next();// ---> la prima riga
-			// --> seconda riga
-
-			// Stampiamone i risultati riga per riga
-
+			boolean tro = res.next();
 			while (tro) {
-				int idC = res.getInt("idruolo");
-
-				System.out.println(idC);
-
+				Ruolo tmp= new Ruolo();
+				System.out.println(res.getInt("idruolo"));
+				tmp.setIdruolo(res.getInt("idruolo"));
+				tmp.setDescrizione(res.getString("descrizione"));
 				System.out.println(res.getString("descrizione"));
-
+				System.out.println(tmp.toString());
+				listaImpiegati.add(tmp); //aggiungo un impiegato alla lista
 				tro = res.next();
 			}
 
@@ -173,8 +188,8 @@ public class RuoloDao extends Collegamento {
 
 			e.printStackTrace();
 		}
+		return listaImpiegati ; 
 	}
-
 	public Optional<Ruolo> getbyId(int id) {
 
 		Optional<Ruolo> tmpRuoloOptional = Optional.empty();
@@ -184,16 +199,23 @@ public class RuoloDao extends Collegamento {
 			String qry = "SELECT * FROM ruolo WHERE idruolo= ? ";
 
 			PreparedStatement cmd = c.prepareStatement(qry);
-
 			cmd.setInt(1, id);
-
+			System.out.println("arriva");
 			ResultSet res = cmd.executeQuery();
-
-			tmpRuoloOptional = Optional.of(new Ruolo(res.getInt("idruolo"), res.getString("descrizione")));
+			boolean tro = res.next();
+			System.out.println(res.getRow());
+			System.out.println("arriva2");
+			if(res.getRow()>=1) {
+				System.out.println(res.getInt("idruolo")+"!!!!!!!!!!!!!"+res.getString("descrizione"));
+				Ruolo ruoloTemp =new Ruolo(res.getInt("idruolo"), res.getString("descrizione"));
+				tmpRuoloOptional = Optional.of(ruoloTemp);
+			}
+			
+			
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.err.println("dddddddddd");
+			System.err.println("cccc");
 
 			e.printStackTrace();
 		}
