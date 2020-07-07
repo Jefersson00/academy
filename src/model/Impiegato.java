@@ -1,6 +1,6 @@
 package model;
 
-public class impiegato {
+public class Impiegato {
 	
 	private int matricola;
 	private String nome;
@@ -9,7 +9,7 @@ public class impiegato {
 	/**
 	 * 
 	 */
-	public impiegato() {
+	public Impiegato() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -19,7 +19,7 @@ public class impiegato {
 	 * @param cognome
 	 * @param email
 	 */
-	public impiegato(int matricola, String nome, String cognome, String email) {
+	public Impiegato(int matricola, String nome, String cognome, String email) {
 		super();
 		this.matricola = matricola;
 		this.nome = nome;
@@ -31,7 +31,7 @@ public class impiegato {
 	 * @param cognome
 	 * @param email
 	 */
-	public impiegato(String nome, String cognome, String email) {
+	public Impiegato(String nome, String cognome, String email) {
 		super();
 		this.nome = nome;
 		this.cognome = cognome;

@@ -13,7 +13,7 @@ public class ImpiegatoDao {
 
 	
 	public ImpiegatoDao() {
-		
+		collegamento.getDbConnection();
 		// TODO Auto-generated constructor stub
 		
 	}
