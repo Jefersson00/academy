@@ -21,6 +21,14 @@ public class Ruolo {
 		this.idruolo = idruolo;
 		this.descrizione = descrizione;
 	}
+	
+	/**
+	 * @param descrizione
+	 */
+	public Ruolo(String descrizione) {
+		super();
+		this.descrizione = descrizione;
+	}
 
 
 	/**
