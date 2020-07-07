@@ -4,18 +4,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
-public class ImpiegatoDao {
+import model.Impiegato;
+import model.Ruolo;
+
+public class ImpiegatoDao extends Collegamento {
 	
 	
-	private static Connection c = collegamento.getDbConnection();
-	private static java.sql.PreparedStatement cmd = null;
+
+	private java.sql.PreparedStatement cmd = null;
+	private Connection c = getDbConnection();
 
 	
 	public ImpiegatoDao() {
-		collegamento.getDbConnection();
-		// TODO Auto-generated constructor stub
-		
+
 	}
 
 	
@@ -37,23 +40,27 @@ public class ImpiegatoDao {
 	}
 
 
-	public static void insert(String nome) throws SQLException {
+	public boolean insert(String nome,String cognome,String email) throws SQLException {
 
-		String updateTableSQL = "INSERT INTO impiegato(nome) VALUES(?)";
+		String updateTableSQL = "INSERT INTO impiegato(nome,cognome,email) VALUES(?,?,?)";
 
 		try {
 
 			cmd = c.prepareStatement(updateTableSQL);
 			cmd.setString(1, nome);
+			cmd.setString(1, cognome);
+			cmd.setString(1, email);
 
 			// execute update SQL stetement
 			cmd.executeUpdate();
 
-			System.out.println("Record is updated to DBcorsor!");
+			System.out.println("insert impiegato Db!");
+			return true;
 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+			return false;
 		} finally {
 
 			if (cmd != null) {
@@ -68,21 +75,37 @@ public class ImpiegatoDao {
 
 	}
 
-	public static void delete(int id) throws SQLException {
+	public boolean delete(int id) throws SQLException {
 
-		String updateTableSQL = "DELETE FROM impiegato WHERE idmatricola = ?";
+		String updateTableSQL = "DELETE FROM impiegato WHERE matricola = ?";
 
 		try {
 			cmd = c.prepareStatement(updateTableSQL);
 			cmd.setInt(1, id);
 
-			// execute update SQL stetement
-			cmd.executeUpdate();
+			Optional<Impiegato> temp = getbyId(id);
+			if (temp.isPresent()) {
+				System.out.println("Delete Ruolo Db");
+				cmd.executeUpdate();
+				if (Optional.of(getbyId(id).get()).isEmpty()) {
+					System.out.println("eliminato corretamente");
 
-			System.out.println("Record is updated to DBUSER table!");
+					return true;
+				} else {
+					System.out.println("non eliminato");
+
+					return false;
+				}
+			} else {
+
+				System.out.println("elemento non trovato ");
+				return false;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(" catch :errore durante la delete ");
+			return false;
 		} finally {
 
 			if (cmd != null) {
@@ -94,7 +117,6 @@ public class ImpiegatoDao {
 			}
 
 		}
-
 	}
 
 	public static void update(int id, String nome) throws SQLException {
@@ -164,6 +186,38 @@ public class ImpiegatoDao {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public Optional<Impiegato> getbyId(int id) {
 
+		Optional<Impiegato> tmpImpiegatoOptional = Optional.empty();
+
+		try {
+
+			String qry = "SELECT * FROM impiegato WHERE matricola= ? ";
+
+			PreparedStatement cmd = c.prepareStatement(qry);
+			cmd.setInt(1, id);
+			System.out.println("arriva");
+			ResultSet res = cmd.executeQuery();
+			boolean tro = res.next();
+			System.out.println(res.getRow());
+			System.out.println("arriva2");
+			if (res.getRow() == 1) {
+				System.out.println(res.getInt("matricola") + "!!!!!!!!!!!!!" + res.getString("nome")+ "!!!!!!!!!!!!!" + res.getString("cognome")+ "!!!!!!!!!!!!!" + res.getString("email"));
+				Impiegato impiegatoTmp = new Impiegato(res.getInt("matricola"), res.getString("nome"), res.getString("cognome"), res.getString("email"));
+				tmpImpiegatoOptional = Optional.of(impiegatoTmp);
+			}
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			System.err.println("cccc");
+
+			e.printStackTrace();
+		}
+		return tmpImpiegatoOptional;
+	}
+
+	
 	
 }
