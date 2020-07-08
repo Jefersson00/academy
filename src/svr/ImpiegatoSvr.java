@@ -31,18 +31,18 @@ public class ImpiegatoSvr extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
-
-		String nome= request.getParameter("nome");
-		
-//		int id = Integer.parseInt(idmatricola);
-		System.out.println(nome);
-		try {
-			ImpiegatoDao.insert(nome);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		response.getWriter().append("Served at: ").append(request.getContextPath());
+//
+//		String nome= request.getParameter("nome");
+//		
+////		int id = Integer.parseInt(idmatricola);
+//		System.out.println(nome);
+//		try {
+//			ImpiegatoDao.insert(nome);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 //		System.out.println("id:"+id);
 		

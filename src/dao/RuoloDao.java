@@ -10,16 +10,18 @@ import java.sql.ResultSet;
 
 import model.Ruolo;
 
-public class RuoloDao extends Collegamento {
-
+public class RuoloDao {
+	
+	Collegamento tmpC=new Collegamento(); 
 	private java.sql.PreparedStatement cmd = null;
-	private Connection c = getDbConnection();
+//	private Connection c = getDbConnection();
+	private Connection c = tmpC.getDbConnection();
 
 	public RuoloDao() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean insert(String descrizione) throws SQLException {
+	public boolean insert(String descrizione) {
 
 		String updateTableSQL = "INSERT INTO ruolo(descrizione) VALUES(?)";
 
@@ -38,21 +40,11 @@ public class RuoloDao extends Collegamento {
 
 			e.printStackTrace();
 			return false;
-		} finally {
-
-			if (cmd != null) {
-				cmd.close();
-			}
-
-			if (c != null) {
-				c.close();
-			}
-
 		}
 
 	}
 
-	public boolean delete(int id) throws SQLException {
+	public boolean delete(int id) {
 
 		String updateTableSQL = "DELETE FROM ruolo WHERE idruolo = ?";
 
@@ -84,20 +76,11 @@ public class RuoloDao extends Collegamento {
 			e.printStackTrace();
 			System.out.println(" catch :errore durante la delete ");
 			return false;
-		} finally {
-
-			if (cmd != null) {
-				cmd.close();
-			}
-
-			if (c != null) {
-				c.close();
-			}
-
 		}
+
 	}
 
-	public Optional<Ruolo> update(int idRuolo, String desc) throws SQLException {
+	public Optional<Ruolo> update(int idRuolo, String desc) {
 
 		Optional<Ruolo> tmpRuoloOptional = Optional.empty();
 		String updateTableSQL = "UPDATE ruolo SET descrizione = ?  WHERE idruolo = ?";
@@ -122,18 +105,9 @@ public class RuoloDao extends Collegamento {
 		} catch (Exception e) {
 
 			e.printStackTrace();
-		} finally {
-
-			if (cmd != null) {
-				cmd.close();
-			}
-
-			if (c != null) {
-				c.close();
-			}
-
 		}
 		return tmpRuoloOptional;
+
 	}
 
 	public List<Ruolo> getAll() {
@@ -194,17 +168,16 @@ public class RuoloDao extends Collegamento {
 		}
 		return tmpRuoloOptional;
 	}
-
-
-	
-
+//
 //	public static void main(String[] args) {
 //
 //		try {
 //			RuoloDao t = new RuoloDao();
-////			boolean testProva = t.insert("police");
-//			Optional<Ruolo> tmp = t.update(8, "ged");
-//			System.out.println(tmp.toString());
+//
+//			boolean testProva = t.insert("ciaciaciaciaci");
+//			System.out.println(testProva);
+////			Optional<Ruolo> tmp = t.update(8, "ged");
+////			System.out.println(tmp.toString());
 ////			System.out.println(testProva);
 ////			System.out.println(t.delete(7));
 ////			List<Ruolo> d = t.getAll();
@@ -216,5 +189,6 @@ public class RuoloDao extends Collegamento {
 //
 //	}
 
-	
+//	DataSource ds = (DataSource) new InitialContext().lookup("java:jboss/datasources/MySqlDS");
+//	Connection con = ds.getConnection();
 }

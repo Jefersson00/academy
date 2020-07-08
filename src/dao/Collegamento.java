@@ -1,60 +1,53 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 public class Collegamento {
-	
-	
-	private  Connection dbConnection = null;
-	private  String nameDb="corsor";
-	private  String port="localhost:3305";
-	private  String driver = "com.mysql.cj.jdbc.Driver";
-	private  String userName = "root";
-	private  String password = "MariaLocalDB";
-	
+
+	private DataSource ds;
+	private Connection dbConnection;
+
 	/**
 	 * 
 	 */
 	public Collegamento() {
+
 		super();
+		try {
+
+			ds = (DataSource) new InitialContext().lookup("java:jboss/datasources/MySqlDS");
+			dbConnection = ds.getConnection();
+			System.out.println(dbConnection+"test db ");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("errore db connection");
+			// TODO: handle exception
+		}
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-	private  boolean conessione() {
-		
-		try {
-			Class.forName(driver);
-			String url = "jdbc:mysql://"+port+"/"+nameDb+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-			dbConnection = DriverManager.getConnection(url, userName, password);
-			System.out.println("conessione!2");
-			return true;
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println("catch!!!!!!");
-			return false;
-		}
-			
-		
+	/**
+	 * @return the ds
+	 */
+	public DataSource getDs() {
+		return ds;
 	}
 
-
+	/**
+	 * @param ds the ds to set
+	 */
+	public void setDs(DataSource ds) {
+		this.ds = ds;
+	}
 
 	/**
 	 * @return the dbConnection
 	 */
 	public Connection getDbConnection() {
-		
-		boolean testC =conessione();
-		System.out.println("Risultato connessione :"+testC);
 		return dbConnection;
 	}
-
-
 
 	/**
 	 * @param dbConnection the dbConnection to set
@@ -63,106 +56,6 @@ public class Collegamento {
 		this.dbConnection = dbConnection;
 	}
 
-
-
-	/**
-	 * @return the nameDb
-	 */
-	public String getNameDb() {
-		return nameDb;
-	}
-
-
-
-	/**
-	 * @param nameDb the nameDb to set
-	 */
-	public void setNameDb(String nameDb) {
-		this.nameDb = nameDb;
-	}
-
-
-
-	/**
-	 * @return the port
-	 */
-	public String getPort() {
-		return port;
-	}
-
-
-
-	/**
-	 * @param port the port to set
-	 */
-	public void setPort(String port) {
-		this.port = port;
-	}
-
-
-
-	/**
-	 * @return the driver
-	 */
-	public String getDriver() {
-		return driver;
-	}
-
-
-
-	/**
-	 * @param driver the driver to set
-	 */
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
-
-
-
-	/**
-	 * @return the userName
-	 */
-	public String getUserName() {
-		return userName;
-	}
-
-
-
-	/**
-	 * @param userName the userName to set
-	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
 	
 
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-
-	@Override
-	public String toString() {
-		return "collegamento [dbConnection=" + dbConnection + ", nameDb=" + nameDb + ", port=" + port + ", driver="
-				+ driver + ", userName=" + userName + ", password=" + password + "]";
-	}
-	
-	
-	
-	
 }

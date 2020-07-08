@@ -26,9 +26,9 @@ public class ImpiegatoDao extends Collegamento {
 	public static void main(String[] args) {
 
 		try {
-
+			ImpiegatoDao tmp =new ImpiegatoDao();
 //			Date d = new Date(new java.util.Date().getTime());
-			ImpiegatoDao.insert("mario");
+//			tmp.insert("mario","peppe","mario@mario.com");
 //			RuoloDao.delete(1);
 //			RuoloDao.update(2, "nuomadescrizione");
 //			RuoloDao.query(2);
@@ -48,8 +48,8 @@ public class ImpiegatoDao extends Collegamento {
 
 			cmd = c.prepareStatement(updateTableSQL);
 			cmd.setString(1, nome);
-			cmd.setString(1, cognome);
-			cmd.setString(1, email);
+			cmd.setString(2, cognome);
+			cmd.setString(3, email);
 
 			// execute update SQL stetement
 			cmd.executeUpdate();
@@ -85,7 +85,7 @@ public class ImpiegatoDao extends Collegamento {
 
 			Optional<Impiegato> temp = getbyId(id);
 			if (temp.isPresent()) {
-				System.out.println("Delete Ruolo Db");
+				System.out.println("Delete Impiegato Db");
 				cmd.executeUpdate();
 				if (Optional.of(getbyId(id).get()).isEmpty()) {
 					System.out.println("eliminato corretamente");
@@ -118,75 +118,96 @@ public class ImpiegatoDao extends Collegamento {
 
 		}
 	}
-
-	public static void update(int id, String nome) throws SQLException {
-
-		String updateTableSQL = "UPDATE ruolo SET impiegato = ?  WHERE idmatricola = ?";
-
-		try {
-
-			cmd = c.prepareStatement(updateTableSQL);
-
-			cmd.setString(1, nome);
-			cmd.setInt(2, id);
-
-			cmd.executeUpdate();
-
-			System.out.println("Record is updated to DBUSER !");
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		} finally {
-
-			if (cmd != null) {
-				cmd.close();
-			}
-
-			if (c != null) {
-				c.close();
-			}
-
-		}
-
-	}
-
-	public static void query(String nome) {
-
-		try {
-
-			String qry = "SELECT * FROM impiegato WHERE nome= ? ";
-
-			// Creiamo un oggetto PrepareStatement per poter interrogare il db
-			PreparedStatement cmd = c.prepareStatement(qry);
-
-			cmd.setString(1,nome);
-
-			ResultSet res = cmd.executeQuery();
-
-			boolean tro = res.next();// ---> la prima riga
-			// --> seconda riga
-
-			// Stampiamone i risultati riga per riga
-
-			while (tro) {
-				int idC = res.getInt("idmatricola");
-
-				System.out.println(idC);
-
-				System.out.println(res.getString("nome"));
-
-				tro = res.next();
-			}
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.err.println("dddddddddd");
-
-			e.printStackTrace();
-		}
-	}
-	
+//
+//	public Optional<Impiegato>  update(int id, String nome, String cognome , String email) throws SQLException {
+//		
+//		Optional<Impiegato> tmpImpiegatoOptional = Optional.empty();
+//
+//		String updateTableSQL = "UPDATE impiegato SET nome = ?,cognome=?,email=?  WHERE matricola = ?";
+//
+//		try {
+//			Optional<Impiegato> tmpTest  = Optional.of(getbyId(id).get());
+//
+//			if (tmpTest.isPresent()) {
+//
+//				cmd = c.prepareStatement(updateTableSQL);
+//				cmd.setString(1, desc);
+//				cmd.setInt(2, idRuolo);
+//
+//				cmd.executeUpdate();
+//
+//				tmpRuoloOptional = Optional.of(getbyId(idRuolo).get());
+//				System.out.println("Record is updated to DBUSER !");
+//
+//			} else {
+//				System.out.println("Ruolo by id " + idRuolo + "isnt present ");
+//			}
+//			
+//			
+//			cmd = c.prepareStatement(updateTableSQL);
+//
+//			cmd.setString(1, nome);
+//			cmd.setString(2, cognome);
+//			cmd.setString(3, email);
+//			cmd.setInt(4, id);
+//
+//			cmd.executeUpdate();
+//
+//			System.out.println("Record is updated to DBUSER !");
+//
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
+//		} finally {
+//
+//			if (cmd != null) {
+//				cmd.close();
+//			}
+//
+//			if (c != null) {
+//				c.close();
+//			}
+//
+//		}
+//
+//	}
+//
+//	public static void query(String nome) {
+//
+//		try {
+//
+//			String qry = "SELECT * FROM impiegato WHERE nome= ? ";
+//
+//			// Creiamo un oggetto PrepareStatement per poter interrogare il db
+//			PreparedStatement cmd = c.prepareStatement(qry);
+//
+//			cmd.setString(1,nome);
+//
+//			ResultSet res = cmd.executeQuery();
+//
+//			boolean tro = res.next();// ---> la prima riga
+//			// --> seconda riga
+//
+//			// Stampiamone i risultati riga per riga
+//
+//			while (tro) {
+//				int idC = res.getInt("idmatricola");
+//
+//				System.out.println(idC);
+//
+//				System.out.println(res.getString("nome"));
+//
+//				tro = res.next();
+//			}
+//
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			System.err.println("dddddddddd");
+//
+//			e.printStackTrace();
+//		}
+//	}
+//	
 	
 	public Optional<Impiegato> getbyId(int id) {
 
