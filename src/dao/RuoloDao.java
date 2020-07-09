@@ -57,7 +57,7 @@ public class RuoloDao {
 			if (temp.isPresent()) {
 				System.out.println("Delete Ruolo Db");
 				cmd.executeUpdate();
-				if (Optional.of(getbyId(id).get()).isEmpty()) {
+				if (getbyId(id).isEmpty()) {
 					System.out.println("eliminato corretamente");
 
 					return true;
@@ -154,7 +154,7 @@ public class RuoloDao {
 			boolean tro = res.next();
 			System.out.println(res.getRow());
 			System.out.println("arriva2");
-			if (res.getRow() >= 1) {
+			if (res.getRow() == 1) {
 				System.out.println(res.getInt("idruolo") + "!!!!!!!!!!!!!" + res.getString("descrizione"));
 				Ruolo ruoloTemp = new Ruolo(res.getInt("idruolo"), res.getString("descrizione"));
 				tmpRuoloOptional = Optional.of(ruoloTemp);

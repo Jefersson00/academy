@@ -9,7 +9,11 @@
 <body>
 <%
 String vrf=request.getParameter("verifica");
+// request.getSession().removeAttribute("verifica");
 %>
 <% out.print(vrf); %>
+<br>
+<a href="/corso/index.html">ritorna alla home </a>
+
 </body>
 </html>
